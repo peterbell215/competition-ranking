@@ -18,6 +18,7 @@ class User < ApplicationRecord
   validates :name, presence: true
   validates :user_type, presence: true
   validate :team_member_must_have_team
+  validate :judges_and_admins_must_not_have_team
 
   # Scopes
   scope :judges, -> { where(user_type: :judge) }
@@ -29,6 +30,12 @@ class User < ApplicationRecord
   def team_member_must_have_team
     if team_member? && team_id.blank?
       errors.add(:team_id, "must be present for team members")
+    end
+  end
+  
+  def judges_and_admins_must_not_have_team
+    if (judge? || admin?) && team_id.present?
+      errors.add(:team_id, "must not be present for judges or admins")
     end
   end
 end
