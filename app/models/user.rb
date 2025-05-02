@@ -8,11 +8,7 @@ class User < ApplicationRecord
   has_many :rankings, dependent: :destroy
 
   # Enums
-  enum user_type: {
-    team_member: 0,
-    judge: 1,
-    admin: 2
-  }
+  enum :user_type, { team_member: 0, judge: 1, admin: 2 }
 
   # Validations
   validates :name, presence: true
