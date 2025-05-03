@@ -5,12 +5,56 @@
 <h1>Teams</h1>
 
 <div id="teams">
-  <% @teams.each do |team| %>
-    <%= render team %>
-    <p>
-      <%= link_to "Show this team", team %>
-    </p>
-  <% end %>
+  <table class="pure-table pure-table-bordered">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Members</th>
+        <th>Excluded Teams</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @teams.each do |team| %>
+        <tr>
+          <td><%= link_to team.name, team %></td>
+          <td><%= team.description.present? ? truncate(team.description, length: 100) : "No description" %></td>
+          <td><%= team.users.count %></td>
+          <td>
+            <% if team.excluded_teams.any? %>
+              <%= team.excluded_teams.map(&:name).join(", ") %>
+            <% else %>
+              <span class="no-exclusions">None</span>
+            <% end %>
+          </td>
+          <td>
+            <%= link_to "Show", team, class: "pure-button pure-button-primary button-small" %>
+            <%= link_to "Edit", edit_team_path(team), class: "pure-button button-small" %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
 </div>
 
-<%= link_to "New team", new_team_path %>
+<div class="action-buttons">
+  <%= link_to "New team", new_team_path, class: "pure-button pure-button-primary" %>
+</div>
+
+<style>
+  .no-exclusions {
+    color: #888;
+    font-style: italic;
+  }
+  
+  .button-small {
+    font-size: 85%;
+    padding: 0.3em 0.7em;
+    margin-right: 0.5em;
+  }
+  
+  .action-buttons {
+    margin-top: 2em;
+  }
+</style>

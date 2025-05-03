@@ -44,7 +44,7 @@
               </tr>
             </thead>
             <tbody>
-              <% team.exclusions.each do |excluded_team| %>
+              <% team.excluded_teams.each do |excluded_team| %>
                 <tr>
                   <td><%= link_to excluded_team.name, team_path(excluded_team) %></td>
                 </tr>
