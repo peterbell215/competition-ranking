@@ -21,10 +21,6 @@
     <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= javascript_importmap_tags %>
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
-
-    <style>
-
-    </style>
   </head>
 
   <div class="banner">
@@ -42,10 +38,10 @@
       </ul>
 
       <!-- Right-aligned logout item -->
-      <ul class="pure-menu-list" style="float: right;">
+      <ul class="pure-menu-list right-menu">
         <% if user_signed_in? %>
           <li class="pure-menu-item">
-            <%= button_to "Logout", destroy_user_session_path, method: :delete, class: "pure-menu-link", style: "background: none; border: none; cursor: pointer;" %>
+            <%= button_to "Logout", destroy_user_session_path, method: :delete, class: "pure-menu-link logout-button" %>
           </li>
         <% else %>
           <li class="pure-menu-item">
@@ -58,7 +54,24 @@
 
   <body>
     <div class="container">
+      <%= render "layouts/notice", notice: notice %>
+
       <%= yield %>
     </div>
   </body>
+  
+  <style>
+    /* Navigation styles */
+    .right-menu {
+      float: right;
+    }
+    
+    .logout-button {
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+    
+    /* Add any other styles that were previously inline here */
+  </style>
 </html>
