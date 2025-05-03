@@ -1,2 +1,120 @@
-<div id="<%= dom_id team %>">
+<div id="<%= dom_id team %>" class="pure-g">
+  <div class="pure-u-1">
+    <div class="team-card">
+      <h2 class="team-name"><%= team.name %></h2>
+      
+      <div class="team-details">
+        <h3>Description</h3>
+        <p class="team-description">
+          <%= team.description.present? ? team.description : "No description provided" %>
+        </p>
+      </div>
+      
+      <div class="team-members">
+        <h3>Members</h3>
+        <% if team.users.any? %>
+          <table class="pure-table pure-table-bordered">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% team.users.each do |user| %>
+                <tr>
+                  <td><%= link_to user.name, user_path(user) %></td>
+                  <td><%= user.email %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        <% else %>
+          <p class="no-members">No members in this team yet</p>
+        <% end %>
+      </div>
+      
+      <div class="team-exclusions">
+        <h3>Excluded from Ranking</h3>
+        <% if team.exclusions.any? %>
+          <table class="pure-table pure-table-bordered">
+            <thead>
+              <tr>
+                <th>Team Name</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% team.exclusions.each do |excluded_team| %>
+                <tr>
+                  <td><%= link_to excluded_team.name, team_path(excluded_team) %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        <% else %>
+          <p class="no-exclusions">This team can rank all other teams</p>
+        <% end %>
+      </div>
+    </div>
+  </div>
 </div>
+
+<style>
+  .team-card {
+    padding: 1.5em;
+    background: #f8f8f8;
+    border-radius: 4px;
+    margin-bottom: 1.5em;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  }
+  
+  .team-name {
+    color: #333;
+    margin-top: 0;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 0.5em;
+  }
+  
+  .team-details {
+    margin: 1em 0;
+  }
+  
+  .team-details h3 {
+    color: #555;
+    font-size: 1.1em;
+    margin-bottom: 0.5em;
+  }
+  
+  .team-description {
+    line-height: 1.6;
+  }
+  
+  .team-metadata {
+    font-size: 0.9em;
+    color: #777;
+    border-top: 1px solid #ddd;
+    padding-top: 0.5em;
+    margin-top: 1em;
+  }
+  
+  .team-metadata p {
+    margin: 0.3em 0;
+  }
+  
+  .team-members, .team-exclusions {
+    margin-top: 1.5em;
+    border-top: 1px solid #ddd;
+    padding-top: 1em;
+  }
+  
+  .team-members h3, .team-exclusions h3 {
+    color: #555;
+    font-size: 1.1em;
+    margin-bottom: 0.5em;
+  }
+  
+  .no-members, .no-exclusions {
+    color: #666;
+    font-style: italic;
+  }
+</style>
