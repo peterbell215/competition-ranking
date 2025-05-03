@@ -1,0 +1,29 @@
+<%= form_with(model: team, html: { class: "pure-form pure-form-aligned" }) do |form| %>
+  <% if team.errors.any? %>
+    <div class="pure-alert pure-alert-error">
+      <h2><%= pluralize(team.errors.count, "error") %> prohibited this team from being saved:</h2>
+
+      <ul>
+        <% team.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <fieldset>
+    <div class="pure-control-group">
+      <%= form.label :name %>
+      <%= form.text_field :name, required: true %>
+    </div>
+
+    <div class="pure-control-group">
+      <%= form.label :description %>
+      <%= form.text_area :description, rows: 4 %>
+    </div>
+
+    <div class="pure-controls">
+      <%= form.submit class: "pure-button pure-button-primary" %>
+    </div>
+  </fieldset>
+<% end %>
