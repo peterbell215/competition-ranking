@@ -27,3 +27,118 @@
     </div>
   </fieldset>
 <% end %>
+
+<% if team.persisted? %>
+  <div class="exclusions-section">
+    <h3>Team Exclusions</h3>
+    <p class="exclusion-explanation">Teams listed here cannot be ranked by <%= team.name %></p>
+
+    <div class="pure-g exclusions-table-header">
+      <div class="pure-u-3-4">Team Name</div>
+      <div class="pure-u-1-4">Actions</div>
+    </div>
+
+    <div class="exclusions-table">
+      <% if team.excluded_teams.any? %>
+        <% team.excluded_teams.each do |excluded_team| %>
+          <div class="pure-g exclusion-row">
+            <div class="pure-u-3-4"><%= excluded_team.name %></div>
+            <div class="pure-u-1-4">
+              <%= button_to "Remove", exclusion_path(team.exclusions.find_by(excluded_team: excluded_team)), 
+                    method: :delete, 
+                    class: "pure-button button-warning button-small", 
+                    form: { data: { turbo_confirm: "Are you sure you want to remove this exclusion?" } } %>
+            </div>
+          </div>
+        <% end %>
+      <% else %>
+        <div class="pure-g exclusion-row empty-row">
+          <div class="pure-u-1">No exclusions - this team can rank all other teams</div>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="add-exclusion-form">
+      <h4>Add New Exclusion</h4>
+      <%= form_with url: team_exclusions_path(team), method: :post, html: { class: "pure-form" } do |f| %>
+        <%= f.hidden_field :team_id, value: team.id %>
+        <div class="pure-g">
+          <div class="pure-u-3-4">
+            <%= f.select :excluded_team_id, 
+                  Team.where.not(id: team.id)
+                      .where.not(id: team.excluded_teams.pluck(:id))
+                      .pluck(:name, :id), 
+                  { include_blank: "Select a team to exclude" }, 
+                  { class: "pure-input-1", required: true } %>
+          </div>
+          <div class="pure-u-1-4">
+            <%= f.submit "Add Exclusion", class: "pure-button pure-button-primary" %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <style>
+    .exclusions-section {
+      margin-top: 2em;
+      padding-top: 1em;
+      border-top: 1px solid #ddd;
+    }
+    
+    .exclusion-explanation {
+      color: #666;
+      margin-bottom: 1em;
+    }
+    
+    .exclusions-table-header {
+      font-weight: bold;
+      background-color: #f0f0f0;
+      padding: 0.5em;
+      border-radius: 4px 4px 0 0;
+    }
+    
+    .exclusions-table {
+      margin-bottom: 1em;
+      border: 1px solid #ddd;
+      border-top: none;
+      border-radius: 0 0 4px 4px;
+    }
+    
+    .exclusion-row {
+      padding: 0.5em;
+      border-bottom: 1px solid #eee;
+      align-items: center;
+    }
+    
+    .exclusion-row:last-child {
+      border-bottom: none;
+    }
+    
+    .empty-row {
+      color: #888;
+      font-style: italic;
+    }
+    
+    .button-warning {
+      background-color: #f0ad4e;
+      color: white;
+    }
+    
+    .button-small {
+      font-size: 85%;
+      padding: 0.3em 0.7em;
+    }
+    
+    .add-exclusion-form {
+      margin-top: 1.5em;
+      padding-top: 1em;
+      border-top: 1px solid #eee;
+    }
+    
+    .add-exclusion-form h4 {
+      margin-top: 0;
+      margin-bottom: 0.5em;
+    }
+  </style>
+<% end %>
