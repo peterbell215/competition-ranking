@@ -21,7 +21,16 @@
     <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= javascript_importmap_tags %>
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+
+    <style>
+
+    </style>
   </head>
+
+  <div class="banner">
+    <%= image_tag "modaxo-logo.png", alt: "Modaxo Logo", class: "banner-logo" %>
+    <div class="banner-title">AI Competition</div>
+  </div>
 
   <nav>
     <div class="pure-menu pure-menu-horizontal">
