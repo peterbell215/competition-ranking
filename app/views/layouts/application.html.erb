@@ -35,12 +35,23 @@
   <nav>
     <div class="pure-menu pure-menu-horizontal">
       <ul class="pure-menu-list">
-        <li class="pure-menu-item">
-          <%= link_to 'Team', teams_path, class: "pure-menu-link" %>
-        </li>
-        <li class="pure-menu-item">
-          <%= link_to 'Users', users_path, class: "pure-menu-link" %>
-        </li>
+        <!-- Left-aligned items -->
+        <li class="pure-menu-item"><%= link_to "Users", users_path, class: "pure-menu-link" %></li>
+        <li class="pure-menu-item"><%= link_to "Teams", teams_path, class: "pure-menu-link" %></li>
+        <!-- Add other nav items as needed -->
+      </ul>
+
+      <!-- Right-aligned logout item -->
+      <ul class="pure-menu-list" style="float: right;">
+        <% if user_signed_in? %>
+          <li class="pure-menu-item">
+            <%= button_to "Logout", destroy_user_session_path, method: :delete, class: "pure-menu-link", style: "background: none; border: none; cursor: pointer;" %>
+          </li>
+        <% else %>
+          <li class="pure-menu-item">
+            <%= link_to "Login", new_user_session_path, class: "pure-menu-link" %>
+          </li>
+        <% end %>
       </ul>
     </div>
   </nav>
