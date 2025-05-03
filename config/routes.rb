@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :rankings
   resources :teams do
     resources :exclusions, only: [:new, :create, :destroy]
   end
