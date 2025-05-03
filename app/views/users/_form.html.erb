@@ -1,6 +1,6 @@
-<%= form_with(model: user) do |form| %>
+<%= form_with model: user, html: { class: "pure-form pure-form-aligned", data: { controller: "user-form" } } do |form| %>
   <% if user.errors.any? %>
-    <div style="color: red">
+    <div class="pure-alert pure-alert-error">
       <h2><%= pluralize(user.errors.count, "error") %> prohibited this user from being saved:</h2>
 
       <ul>
@@ -11,7 +11,69 @@
     </div>
   <% end %>
 
-  <div>
-    <%= form.submit %>
-  </div>
+  <fieldset>
+    <div class="pure-control-group">
+      <%= form.label :name %>
+      <%= form.text_field :name %>
+    </div>
+
+    <div class="pure-control-group">
+      <%= form.label :email %>
+      <%= form.email_field :email %>
+    </div>
+
+    <div class="pure-control-group">
+      <%= form.label :password %>
+      <%= form.password_field :password %>
+      <% if user.persisted? %>
+        <span class="pure-form-message">Leave blank if you don't want to change it</span>
+      <% end %>
+    </div>
+
+    <div class="pure-control-group">
+      <%= form.label :password_confirmation %>
+      <%= form.password_field :password_confirmation %>
+    </div>
+
+    <div class="pure-control-group user-type-row">
+      <%= form.label :user_type %>
+      <div class="pure-radio-group user-type-buttons">
+        <label class="pure-radio">
+          <%= form.radio_button :user_type, 'team_member', id: 'user_type_team_member', 
+              data: { action: "user-form#toggleTeam" } %>
+          Team Member
+        </label>
+        <label class="pure-radio">
+          <%= form.radio_button :user_type, 'judge', id: 'user_type_judge', 
+              data: { action: "user-form#toggleTeam" } %>
+          Judge
+        </label>
+        <label class="pure-radio">
+          <%= form.radio_button :user_type, 'admin', id: 'user_type_admin', 
+              data: { action: "user-form#toggleTeam" } %>
+          Admin
+        </label>
+      </div>
+    </div>
+
+    <div class="pure-control-group" id="team_selection" data-user-form-target="teamSelection">
+      <%= form.label :team_id %>
+      <%= form.collection_select :team_id, Team.all, :id, :name, { include_blank: true } %>
+    </div>
+
+    <div class="pure-controls">
+      <%= form.submit class: "pure-button pure-button-primary" %>
+    </div>
+  </fieldset>
 <% end %>
+
+<style>
+    .pure-control-group.user-type-row {
+        display: inline-block !important;
+        width: auto;
+    }
+    .pure-radio-group.user-type-buttons {
+        display: inline-block;
+        justify-content: left;
+    }
+</style>
