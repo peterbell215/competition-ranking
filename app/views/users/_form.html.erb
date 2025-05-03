@@ -22,19 +22,6 @@
       <%= form.email_field :email %>
     </div>
 
-    <div class="pure-control-group">
-      <%= form.label :password %>
-      <%= form.password_field :password %>
-      <% if user.persisted? %>
-        <span class="pure-form-message">Leave blank if you don't want to change it</span>
-      <% end %>
-    </div>
-
-    <div class="pure-control-group">
-      <%= form.label :password_confirmation %>
-      <%= form.password_field :password_confirmation %>
-    </div>
-
     <div class="pure-control-group user-type-row">
       <%= form.label :user_type %>
       <div class="pure-radio-group user-type-buttons">

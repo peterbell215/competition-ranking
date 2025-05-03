@@ -42,10 +42,14 @@ gem "thruster", require: false
 
 # Authentication
 gem 'devise'
+gem 'devise_invitable', '~> 2.0.0'
 
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
+
+  # User to test mails
+  gem "letter_opener"
 end
 
 group :development, :test do
