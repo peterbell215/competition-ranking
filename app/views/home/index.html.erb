@@ -1,0 +1,57 @@
+<!-- app/views/home/index.html.erb or your root page -->
+<% if user_signed_in? %>
+  <!-- Existing content for logged-in users -->
+<% else %>
+  <div class="splash-container">
+    <div class="splash">
+      <h1 class="splash-head">Welcome to Team Management</h1>
+      <p class="splash-subhead">
+        A simple platform for organizing and evaluating teams
+      </p>
+      <div class="splash-buttons">
+        <%= link_to "Login", new_user_session_path, class: "pure-button pure-button-primary" %>
+        <%= link_to "Register", new_user_registration_path, class: "pure-button" %>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .splash-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 80vh;
+    }
+
+    .splash {
+      text-align: center;
+      max-width: 600px;
+      padding: 2em;
+      background-color: #f7f7f7;
+      border-radius: 4px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .splash-head {
+      font-weight: 500;
+      color: #34495e;
+      margin-bottom: 0.5em;
+    }
+
+    .splash-subhead {
+      color: #666;
+      line-height: 1.5;
+      margin-bottom: 2em;
+    }
+
+    .splash-buttons .pure-button {
+      margin: 0 0.5em;
+      padding: 0.8em 1.5em;
+    }
+
+    .pure-button-primary {
+      background-color: #1f8dd6;
+      color: white;
+    }
+  </style>
+<% end %>

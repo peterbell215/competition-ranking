@@ -9,5 +9,5 @@ Rails.application.routes.draw do
   resources :users
 
   # Defines the root path route ("/")
-  root to: 'users#index'
+  root to: 'home#index'
 end

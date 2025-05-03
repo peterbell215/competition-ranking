@@ -1,2 +1,90 @@
-<div id="<%= dom_id user %>">
+<div id="<%= dom_id user %>" class="pure-g">
+  <div class="pure-u-1">
+    <div class="user-card">
+      <h2 class="user-name"><%= user.name %></h2>
+      
+      <div class="user-details">
+        <div class="detail-group">
+          <h3>Email</h3>
+          <p class="user-email"><%= user.email %></p>
+        </div>
+        
+        <div class="detail-group">
+          <h3>Password Status</h3>
+          <p class="password-status">
+            <%= user.encrypted_password.present? ? "Password has been set" : "Password not set" %>
+          </p>
+        </div>
+        
+        <div class="detail-group">
+          <h3>User Type</h3>
+          <p class="user-type">
+            <%= user.user_type.present? ? user.user_type.titleize : "Not specified" %>
+          </p>
+        </div>
+        
+        <div class="detail-group">
+          <h3>Team Membership</h3>
+          <% if user.team.present? %>
+            <p class="team-membership">
+              <%= link_to user.team.name, team_path(user.team) %>
+            </p>
+          <% else %>
+            <p class="team-membership">Not a member of any team</p>
+          <% end %>
+        </div>
+        
+        <div class="detail-group">
+          <h3>Last Login</h3>
+          <p class="last-login">
+            <%= user.last_login_at.present? ? user.last_login_at.strftime("%B %d, %Y at %I:%M %p") : "Never logged in" %>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
+
+<style>
+  .user-card {
+    padding: 1.5em;
+    background: #f8f8f8;
+    border-radius: 4px;
+    margin-bottom: 1.5em;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  }
+  
+  .user-name {
+    color: #333;
+    margin-top: 0;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 0.5em;
+  }
+  
+  .user-details {
+    margin: 1em 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5em;
+  }
+  
+  .detail-group h3 {
+    color: #555;
+    font-size: 1.1em;
+    margin-bottom: 0.5em;
+  }
+  
+  .user-email, .password-status, .user-type, .team-membership, .last-login {
+    line-height: 1.6;
+    margin: 0.3em 0;
+  }
+  
+  .team-membership a {
+    color: #0078e7;
+    text-decoration: none;
+  }
+  
+  .team-membership a:hover {
+    text-decoration: underline;
+  }
+</style>
