@@ -3,7 +3,9 @@ Rails.application.routes.draw do
     resources :exclusions, only: [:new, :create, :destroy]
   end
 
-  devise_for :users
+  devise_for :users, controllers: {
+    sessions: 'users/sessions'
+  }
   resources :users
 
   # Defines the root path route ("/")

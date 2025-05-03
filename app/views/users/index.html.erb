@@ -5,12 +5,37 @@
 <h1>Users</h1>
 
 <div id="users">
-  <% @users.each do |user| %>
-    <%= render user %>
-    <p>
-      <%= link_to "Show this user", user %>
-    </p>
-  <% end %>
+  <table class="pure-table pure-table-bordered pure-table-striped">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Last Login</th>
+        <th>User Type</th>
+        <th>Team</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @users.each do |user| %>
+        <tr>
+          <td><%= user.name %></td>
+          <td><%= user.email %></td>
+          <td><%= user.last_login_at&.strftime('%Y-%m-%d %H:%M') || 'Never' %></td>
+          <td><%= user.user_type&.humanize %></td>
+          <td><%= user.team&.name || 'None' %></td>
+          <td>
+            <div class="action-buttons" style="display: flex; gap: 5px;">
+              <%= link_to "Show", user, class: "pure-button pure-button-primary" %>
+              <%= button_to "Delete", user, method: :delete, class: "pure-button", form: { data: { turbo_confirm: 'Are you sure?' }, style: "margin: 0;" } %>
+            </div>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
 </div>
 
-<%= link_to "New user", new_user_path %>
+<div class="pure-button-group" role="group" style="margin-top: 20px;">
+  <%= link_to "New user", new_user_path, class: "pure-button pure-button-primary" %>
+</div>
