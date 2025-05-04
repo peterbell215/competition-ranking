@@ -14,6 +14,8 @@ Rails.application.routes.draw do
       patch :update_rankings
     end
   end
+  
+  resources :results, only: [:index]
 
   # Defines the root path route ("/")
   root to: "rankings#index"

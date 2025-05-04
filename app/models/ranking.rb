@@ -16,9 +16,4 @@ class Ranking < ApplicationRecord
       Ranking.where(user_id: user.id, team_id: team_id, category: category).update!(position: position + 1)
     end
   end
-
-  # Class method to get average score for a team by category
-  def self.average_score_by_category(team_id, category)
-    where(team_id: team_id, category: category).average(:position)
-  end
 end

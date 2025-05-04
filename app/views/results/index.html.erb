@@ -1,0 +1,208 @@
+<% content_for :title, "Competition Results" %>
+
+<div class="results-container">
+  <h1>Competition Results</h1>
+  
+  <div class="results-section">
+    <h2>Technical Merit</h2>
+    <table class="pure-table pure-table-bordered">
+      <thead>
+        <tr>
+          <th colspan="2" class="section-header">Team Member Rankings</th>
+          <th colspan="2" class="section-header">Judge & Admin Rankings</th>
+          <th colspan="2" class="section-header">Combined Rankings</th>
+        </tr>
+        <tr>
+          <th>Team</th>
+          <th>Average Position</th>
+          <th>Team</th>
+          <th>Average Position</th>
+          <th>Team</th>
+          <th>Average Position</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% 
+          # Sort by team member average (lower is better)
+          team_member_sorted = @technical_results.sort_by { |r| r[:team_member_avg] || Float::INFINITY } 
+          # Sort by judge/admin average (lower is better)
+          judge_admin_sorted = @technical_results.sort_by { |r| r[:judge_admin_avg] || Float::INFINITY }
+          # Sort by combined average (lower is better)
+          combined_sorted = @technical_results.sort_by { |r| r[:combined_avg] || Float::INFINITY }
+        %>
+        
+        <% [team_member_sorted.length, judge_admin_sorted.length, combined_sorted.length].max.times do |i| %>
+          <tr>
+            <% if i < team_member_sorted.length %>
+              <td><%= team_member_sorted[i][:team].name %></td>
+              <td><%= number_with_precision(team_member_sorted[i][:team_member_avg], precision: 2) %></td>
+            <% else %>
+              <td colspan="2"></td>
+            <% end %>
+            
+            <% if i < judge_admin_sorted.length %>
+              <td><%= judge_admin_sorted[i][:team].name %></td>
+              <td><%= number_with_precision(judge_admin_sorted[i][:judge_admin_avg], precision: 2) %></td>
+            <% else %>
+              <td colspan="2"></td>
+            <% end %>
+            
+            <% if i < combined_sorted.length %>
+              <td><%= combined_sorted[i][:team].name %></td>
+              <td><%= number_with_precision(combined_sorted[i][:combined_avg], precision: 2) %></td>
+            <% else %>
+              <td colspan="2"></td>
+            <% end %>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+  
+  <div class="results-section">
+    <h2>Commercial Merit</h2>
+    <table class="pure-table pure-table-bordered">
+      <thead>
+        <tr>
+          <th colspan="2" class="section-header">Team Member Rankings</th>
+          <th colspan="2" class="section-header">Judge & Admin Rankings</th>
+          <th colspan="2" class="section-header">Combined Rankings</th>
+        </tr>
+        <tr>
+          <th>Team</th>
+          <th>Average Position</th>
+          <th>Team</th>
+          <th>Average Position</th>
+          <th>Team</th>
+          <th>Average Position</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% 
+          # Sort by team member average (lower is better)
+          team_member_sorted = @commercial_results.sort_by { |r| r[:team_member_avg] || Float::INFINITY } 
+          # Sort by judge/admin average (lower is better)
+          judge_admin_sorted = @commercial_results.sort_by { |r| r[:judge_admin_avg] || Float::INFINITY }
+          # Sort by combined average (lower is better)
+          combined_sorted = @commercial_results.sort_by { |r| r[:combined_avg] || Float::INFINITY }
+        %>
+        
+        <% [team_member_sorted.length, judge_admin_sorted.length, combined_sorted.length].max.times do |i| %>
+          <tr>
+            <% if i < team_member_sorted.length %>
+              <td><%= team_member_sorted[i][:team].name %></td>
+              <td><%= number_with_precision(team_member_sorted[i][:team_member_avg], precision: 2) %></td>
+            <% else %>
+              <td colspan="2"></td>
+            <% end %>
+            
+            <% if i < judge_admin_sorted.length %>
+              <td><%= judge_admin_sorted[i][:team].name %></td>
+              <td><%= number_with_precision(judge_admin_sorted[i][:judge_admin_avg], precision: 2) %></td>
+            <% else %>
+              <td colspan="2"></td>
+            <% end %>
+            
+            <% if i < combined_sorted.length %>
+              <td><%= combined_sorted[i][:team].name %></td>
+              <td><%= number_with_precision(combined_sorted[i][:combined_avg], precision: 2) %></td>
+            <% else %>
+              <td colspan="2"></td>
+            <% end %>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+  
+  <div class="results-section">
+    <h2>Overall Merit</h2>
+    <table class="pure-table pure-table-bordered">
+      <thead>
+        <tr>
+          <th colspan="2" class="section-header">Team Member Rankings</th>
+          <th colspan="2" class="section-header">Judge & Admin Rankings</th>
+          <th colspan="2" class="section-header">Combined Rankings</th>
+        </tr>
+        <tr>
+          <th>Team</th>
+          <th>Average Position</th>
+          <th>Team</th>
+          <th>Average Position</th>
+          <th>Team</th>
+          <th>Average Position</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% 
+          # Sort by team member average (lower is better)
+          team_member_sorted = @overall_results.sort_by { |r| r[:team_member_avg] || Float::INFINITY } 
+          # Sort by judge/admin average (lower is better)
+          judge_admin_sorted = @overall_results.sort_by { |r| r[:judge_admin_avg] || Float::INFINITY }
+          # Sort by combined average (lower is better)
+          combined_sorted = @overall_results.sort_by { |r| r[:combined_avg] || Float::INFINITY }
+        %>
+        
+        <% [team_member_sorted.length, judge_admin_sorted.length, combined_sorted.length].max.times do |i| %>
+          <tr>
+            <% if i < team_member_sorted.length %>
+              <td><%= team_member_sorted[i][:team].name %></td>
+              <td><%= number_with_precision(team_member_sorted[i][:team_member_avg], precision: 2) %></td>
+            <% else %>
+              <td colspan="2"></td>
+            <% end %>
+            
+            <% if i < judge_admin_sorted.length %>
+              <td><%= judge_admin_sorted[i][:team].name %></td>
+              <td><%= number_with_precision(judge_admin_sorted[i][:judge_admin_avg], precision: 2) %></td>
+            <% else %>
+              <td colspan="2"></td>
+            <% end %>
+            
+            <% if i < combined_sorted.length %>
+              <td><%= combined_sorted[i][:team].name %></td>
+              <td><%= number_with_precision(combined_sorted[i][:combined_avg], precision: 2) %></td>
+            <% else %>
+              <td colspan="2"></td>
+            <% end %>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<style>
+  .results-container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .results-section {
+    margin-bottom: 2em;
+  }
+  
+  .pure-table {
+    width: 100%;
+    margin-bottom: 1em;
+  }
+  
+  .section-header {
+    background-color: #f0f0f0;
+    font-weight: bold;
+    text-align: center;
+  }
+  
+  /* Highlight winners */
+  tbody tr:first-child td {
+    font-weight: bold;
+    background-color: #fafafa;
+  }
+  
+  /* Responsive layout */
+  @media (max-width: 768px) {
+    .pure-table {
+      font-size: 0.85em;
+    }
+  }
+</style>
