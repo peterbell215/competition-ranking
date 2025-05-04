@@ -32,8 +32,10 @@
     <div class="pure-menu pure-menu-horizontal">
       <ul class="pure-menu-list">
         <!-- Left-aligned items -->
-        <li class="pure-menu-item"><%= link_to "Users", users_path, class: "pure-menu-link" %></li>
-        <li class="pure-menu-item"><%= link_to "Teams", teams_path, class: "pure-menu-link" %></li>
+        <% if user_signed_in? && current_user.admin? %>
+          <li class="pure-menu-item"><%= link_to "Users", users_path, class: "pure-menu-link" %></li>
+          <li class="pure-menu-item"><%= link_to "Teams", teams_path, class: "pure-menu-link" %></li>
+        <% end %>
         <li class="pure-menu-item"><%= link_to "Rankings", rankings_path, class: "pure-menu-link" %></li>
         <!-- Add other nav items as needed -->
       </ul>
@@ -42,6 +44,7 @@
       <ul class="pure-menu-list right-menu">
         <% if user_signed_in? %>
           <li class="pure-menu-item">
+            <span class="user-info"><%= current_user.name %> (<%= current_user.user_type.humanize %>)</span>
             <%= button_to "Logout", destroy_user_session_path, method: :delete, class: "pure-menu-link logout-button" %>
           </li>
         <% else %>
@@ -71,6 +74,12 @@
       background: none;
       border: none;
       cursor: pointer;
+    }
+    
+    .user-info {
+      margin-right: 10px;
+      font-size: 0.9em;
+      color: #666;
     }
     
     /* Add any other styles that were previously inline here */

@@ -1,4 +1,7 @@
 class TeamsController < ApplicationController
+  include AdminAuthentication
+
+  before_action :authenticate_user!
   before_action :set_team, only: %i[ show edit update destroy ]
 
   # GET /teams or /teams.json
@@ -58,13 +61,14 @@ class TeamsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_team
-      @team = Team.find(params.require(:id))
-    end
 
-    # Only allow a list of trusted parameters through.
-    def team_params
-      params.require(:team).permit(:name, :description)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_team
+    @team = Team.find(params.require(:id))
+  end
+
+  # Only allow a list of trusted parameters through.
+  def team_params
+    params.require(:team).permit(:name, :description)
+  end
 end

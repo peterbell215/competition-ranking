@@ -16,5 +16,5 @@ Rails.application.routes.draw do
   end
 
   # Defines the root path route ("/")
-  root to: "home#index"
+  root to: "rankings#index"
 end
