@@ -100,4 +100,71 @@ RSpec.describe User, type: :model do
       end
     end
   end
+
+  describe "#find_or_create_rankings" do
+    let!(:team1) { FactoryBot.create(:team) }
+    let!(:team2) { FactoryBot.create(:team) }
+    let!(:team3) { FactoryBot.create(:team) }
+    let(:category) { "technical" }
+
+    context "when user is a team member" do
+      let(:user) { FactoryBot.create(:team_member, team: team1) }
+
+      it "creates rankings for all available teams (excluding own team)" do
+        rankings = user.find_or_create_rankings(category)
+        team_ids = rankings.map(&:team_id)
+
+        expect(team_ids).to match_array([team2.id, team3.id])
+        expect(rankings.all? { |r| r.category == category }).to be true
+        expect(rankings.all? { |r| r.user_id == user.id }).to be true
+      end
+
+      it 'adds an additional team if they are missing from the rankings' do
+        rankings1 = user.find_or_create_rankings(category)
+
+        FactoryBot.create(:team)
+        rankings2 = user.find_or_create_rankings(category)
+
+        expect(rankings2.size).to eq(rankings1.size + 1)
+      end
+
+      it "does not duplicate rankings on subsequent calls" do
+        rankings1 = user.find_or_create_rankings(category)
+        rankings2 = user.find_or_create_rankings(category)
+        expect(rankings2.size).to eq(rankings1.size)
+        expect(Ranking.where(user: user, category: category).count).to eq(rankings1.size)
+      end
+
+      it "creates rankings only for non-excluded teams" do
+        FactoryBot.create(:exclusion, team: user.team, excluded_team: team3)
+        rankings = user.find_or_create_rankings(category)
+        team_ids = rankings.map(&:team_id)
+
+        expect(team_ids).to match_array([team2.id])
+        expect(team_ids).not_to include(team1.id, team3.id)
+      end
+    end
+
+    context "when user is a judge" do
+      let(:user) { FactoryBot.create(:judge) }
+
+      it "creates rankings for all teams" do
+        rankings = user.find_or_create_rankings(category)
+        team_ids = rankings.map(&:team_id)
+
+        expect(team_ids).to match_array([team1.id, team2.id, team3.id])
+      end
+    end
+
+    context "when user is an admin" do
+      let(:user) { FactoryBot.create(:admin) }
+
+      it "creates rankings for all teams" do
+        rankings = user.find_or_create_rankings(category)
+        team_ids = rankings.map(&:team_id)
+
+        expect(team_ids).to match_array([team1.id, team2.id, team3.id])
+      end
+    end
+  end
 end

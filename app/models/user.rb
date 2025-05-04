@@ -42,6 +42,22 @@ class User < ApplicationRecord
     teams
   end
 
+  def find_or_create_rankings(category)
+    rankings = self.rankings.where(category: category).order(:position).includes(:team).to_a
+
+    # If the number of teams stored in rankings is less than the available teams, we need to add the missing teams.
+    if rankings.count < available_teams.count
+      additional_team_ids = (available_teams.ids - rankings.pluck(:team_id)).shuffle!
+      additional_positions = ((rankings.count + 1)..).each
+
+      additional_team_ids.each do |team_id|
+        rankings << Ranking.create(user: self, team_id: team_id, category: category, position: additional_positions.next)
+      end
+    end
+
+    rankings
+  end
+
   private
 
   def team_member_must_have_team
