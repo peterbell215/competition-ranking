@@ -1,12 +1,18 @@
 require 'csv'
 
 namespace :data do
-  desc 'Load team members from a CSV file'
-  task :load, [:csv_file] => :environment do |t, args|
+  desc 'Load team members from a CSV file. Usage: rake "data:load[path/to/file.csv,send_invitations]" - send_invitations is optional (default: false)'
+  task :load, [:csv_file, :send_invitations] => :environment do |t, args|
     if args[:csv_file].nil?
-      puts "Error: Missing CSV file path. Usage: rake data:load[path/to/csv/file.csv]"
+      puts "Error: Missing CSV file path."
+      puts "Usage: rake \"data:load[path/to/file.csv,send_invitations]\""
+      puts "  - send_invitations: Optional. Set to 'true' to send invitation emails (default: false)"
       exit 1
     end
+    
+    # Determine whether to send invitation emails (default: false)
+    send_invitations = args[:send_invitations].to_s.downcase == 'true'
+    puts "Invitation emails will #{send_invitations ? '' : 'NOT '} be sent."
 
     unless File.exist?(args[:csv_file])
       puts "Error: CSV file not found: #{args[:csv_file]}"
@@ -97,13 +103,6 @@ namespace :data do
             puts "  User already exists: #{user.name} (#{user.email})"
           end
         else
-          # Temporarily patch the User model to skip invitation emails
-          old_method = User.instance_method(:send_invitation_email) rescue nil
-          
-          if old_method
-            User.define_method(:send_invitation_email) { true } # do nothing for now
-          end
-          
           # Create a new user
           user = User.new(
             name: user_name,
@@ -113,8 +112,20 @@ namespace :data do
             password: SecureRandom.hex(12) # This will be reset when they accept the invitation
           )
           
-          # Set any devise_invitable attributes directly if available
-          user.skip_invitation = true if user.respond_to?(:skip_invitation=)
+          if send_invitations
+            # Let invitations be sent normally
+            puts "  Sending invitation email to: #{user_email}"
+          else
+            # Skip sending invitation emails
+            old_method = User.instance_method(:send_invitation_email) rescue nil
+            
+            if old_method
+              User.define_method(:send_invitation_email) { true } # do nothing for now
+            end
+            
+            # Set any devise_invitable attributes directly if available
+            user.skip_invitation = true if user.respond_to?(:skip_invitation=)
+          end
           
           if user.save(validate: false)
             team_member_count += 1
@@ -123,8 +134,8 @@ namespace :data do
             puts "  Error creating team member: #{user.name} (#{user.email}) - #{user.errors.full_messages.join(', ')}"
           end
           
-          # Restore the original method
-          if old_method
+          # Restore the original method if we patched it
+          if !send_invitations && defined?(old_method) && old_method
             User.define_method(:send_invitation_email, old_method)
           end
         end
@@ -137,5 +148,37 @@ namespace :data do
     puts "Processed #{row_count} rows"
     puts "Created/updated #{teams_cache.size} teams"
     puts "Created/updated #{team_member_count} team members"
+    puts "Invitation emails were #{send_invitations ? '' : 'NOT '}sent"
+    
+    unless send_invitations
+      puts "\nTo send invitation emails to these users later, you can run:"
+      puts "  rake data:send_invitations"
+    end
+  end
+  
+  desc 'Send invitation emails to all users who have not logged in yet'
+  task :send_invitations => :environment do
+    non_active_users = User.where(last_login_at: nil)
+    count = 0
+    
+    puts "Found #{non_active_users.count} users who have never logged in."
+    puts "Sending invitation emails..."
+    
+    non_active_users.find_each do |user|
+      begin
+        # Skip if the user doesn't have an email
+        next if user.email.blank?
+        
+        # Use the devise_invitable method to send an invitation
+        if user.invite!
+          count += 1
+          puts "Sent invitation to: #{user.name} (#{user.email})"
+        end
+      rescue => e
+        puts "Error sending invitation to #{user.name} (#{user.email}): #{e.message}"
+      end
+    end
+    
+    puts "Sent #{count} invitation emails."
   end
 end
