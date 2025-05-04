@@ -15,8 +15,8 @@ class RankingsController < ApplicationController
     rankings_by_category.each_pair do |category, team_rankings|
       Ranking.update_rankings(current_user, category, team_rankings)
     end
-    render json: { success: true }
+    render json: { success: true, notice: "Rankings saved successfully!" }
   rescue => e
-    render json: { error: e.message }, status: :unprocessable_entity
+    render json: { success: false, error: e.message }, status: :unprocessable_entity
   end
 end

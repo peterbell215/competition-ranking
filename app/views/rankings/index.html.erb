@@ -1,8 +1,10 @@
 <!-- app/views/rankings/index.html.erb -->
-<div class="rankings-container">
+<div class="rankings-container" data-controller="rankings">
+  <div id="rankings_notice_container" data-rankings-target="notice"></div>
+  
   <h1>Team Rankings</h1>
 
-  <div class="pure-g" data-controller="rankings">
+  <div class="pure-g">
     <div class="pure-u-1-3">
       <div class="ranking-column" data-category="technical">
         <h2>Technical Merit</h2>
@@ -72,5 +74,11 @@
     .save-container {
         margin-top: 30px;
         text-align: center;
+    }
+    
+    #notice_explanation.error h2 {
+        color: #721c24;
+        background-color: #f8d7da;
+        border: 1px solid #f5c6cb;
     }
 </style>
