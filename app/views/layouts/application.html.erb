@@ -45,6 +45,8 @@
         <% if user_signed_in? %>
           <li class="pure-menu-item">
             <span class="user-info"><%= current_user.name %> (<%= current_user.user_type.humanize %>)</span>
+          </li>
+          <li class="pure-menu-item">
             <%= button_to "Logout", destroy_user_session_path, method: :delete, class: "pure-menu-link logout-button" %>
           </li>
         <% else %>
