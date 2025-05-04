@@ -2,7 +2,7 @@ FactoryBot.define do
   factory :user do
     skip_invitation     { true }
     password            { "password" }
-    
+
     factory :team_member do
       sequence(:name)   { |n| "Team Member #{n}" }
       sequence(:email)  { |n| "team.member#{n}@modaxo.com" }
