@@ -1,3 +1,6 @@
+# LetterOpener only used in Development
+return unless ENV['RAILS_ENV'] == 'development'
+
 LetterOpener.configure do |config|
   # To overrider the location for message storage.
   # Default value is `tmp/letter_opener`
