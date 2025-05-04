@@ -59,8 +59,10 @@
   </nav>
 
   <body>
-    <div class="container">
-      <%= render "layouts/notice", notice: notice %>
+    <div class="container" data-controller="notice-dismissal">
+      <div data-notice-dismissal-target="notice">
+        <%= render "layouts/notice", notice: notice %>
+      </div>
 
       <%= yield %>
     </div>
@@ -82,6 +84,11 @@
       margin-right: 10px;
       font-size: 0.9em;
       color: #666;
+    }
+    
+    /* Notice styling */
+    [data-notice-dismissal-target="notice"] {
+      transition: opacity 0.3s ease-in-out;
     }
     
     /* Add any other styles that were previously inline here */
