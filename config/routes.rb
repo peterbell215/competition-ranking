@@ -1,14 +1,19 @@
 Rails.application.routes.draw do
-  resources :rankings
+  devise_for :users, controllers: {
+    sessions: "users/sessions"
+  }
+  resources :users
+
   resources :teams do
     resources :exclusions, only: [:new, :create, :destroy]
   end
 
-  devise_for :users, controllers: {
-    sessions: 'users/sessions'
-  }
-  resources :users
+  resources :rankings, only: [:index] do
+    collection do
+      patch :update
+    end
+  end
 
   # Defines the root path route ("/")
-  root to: 'home#index'
+  root to: "home#index"
 end

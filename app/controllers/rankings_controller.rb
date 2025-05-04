@@ -1,70 +1,35 @@
+# app/controllers/rankings_controller.rb
 class RankingsController < ApplicationController
-  before_action :set_ranking, only: %i[ show edit update destroy ]
+  before_action :authenticate_user!
 
-  # GET /rankings or /rankings.json
   def index
-    @rankings = Ranking.all
+    @teams = current_user.available_teams
+    @technical_rankings = current_user.find_or_create_rankings(:technical)
+    @commercial_rankings = current_user.find_or_create_rankings(:commercial)
+    @overall_rankings = current_user.find_or_create_rankings(:overall)
   end
 
-  # GET /rankings/1 or /rankings/1.json
-  def show
-  end
-
-  # GET /rankings/new
-  def new
-    @ranking = Ranking.new
-  end
-
-  # GET /rankings/1/edit
-  def edit
-  end
-
-  # POST /rankings or /rankings.json
-  def create
-    @ranking = Ranking.new(ranking_params)
-
-    respond_to do |format|
-      if @ranking.save
-        format.html { redirect_to @ranking, notice: "Ranking was successfully created." }
-        format.json { render :show, status: :created, location: @ranking }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @ranking.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-
-  # PATCH/PUT /rankings/1 or /rankings/1.json
   def update
-    respond_to do |format|
-      if @ranking.update(ranking_params)
-        format.html { redirect_to @ranking, notice: "Ranking was successfully updated." }
-        format.json { render :show, status: :ok, location: @ranking }
-      else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @ranking.errors, status: :unprocessable_entity }
+
+
+
+    begin
+      ActiveRecord::Base.transaction do
+        params[:rankings].each do |category, team_rankings|
+          team_rankings.each_with_index do |team_id, position|
+            ranking = Ranking.find_or_initialize_by(
+              user: current_user,
+              team_id: team_id,
+              category: category
+            )
+            ranking.merit = 10 - position # Higher position = higher merit (10 to 1)
+            ranking.save!
+          end
+        end
       end
+      render json: { success: true }
+    rescue => e
+      render json: { error: e.message }, status: :unprocessable_entity
     end
   end
-
-  # DELETE /rankings/1 or /rankings/1.json
-  def destroy
-    @ranking.destroy!
-
-    respond_to do |format|
-      format.html { redirect_to rankings_path, status: :see_other, notice: "Ranking was successfully destroyed." }
-      format.json { head :no_content }
-    end
-  end
-
-  private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_ranking
-      @ranking = Ranking.find(params.expect(:id))
-    end
-
-    # Only allow a list of trusted parameters through.
-    def ranking_params
-      params.fetch(:ranking, {})
-    end
 end
