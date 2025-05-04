@@ -16,4 +16,19 @@ class Ranking < ApplicationRecord
       Ranking.where(user_id: user.id, team_id: team_id, category: category).update!(position: position + 1)
     end
   end
+
+  def self.calculate_results_for_user_type_and_category(user_type, category)
+    results = {}
+
+    Team.all.each do |team|
+      # Get all rankings for this team in this category
+      average_position = Ranking.where(team: team, category: category).joins(:user).where(users: { user_type: user_type }).average(:position)
+
+      # Skip if no rankings for this team
+      results[team] = average_position if average_position
+    end
+
+    # Return results sorted by position (lower is better)
+    results.sort_by { |_team, average_position| average_position || Float::INFINITY }
+  end
 end
