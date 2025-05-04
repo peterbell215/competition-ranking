@@ -8,9 +8,10 @@ Rails.application.routes.draw do
     resources :exclusions, only: [:new, :create, :destroy]
   end
 
+
   resources :rankings, only: [:index] do
     collection do
-      patch :update
+      patch :update_rankings
     end
   end
 

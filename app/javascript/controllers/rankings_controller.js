@@ -30,7 +30,7 @@ export default class extends Controller {
             });
 
             // Send rankings to server
-            fetch('/rankings', {
+            fetch('/rankings/update_rankings', {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',

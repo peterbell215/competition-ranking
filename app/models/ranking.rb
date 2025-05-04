@@ -12,9 +12,11 @@ class Ranking < ApplicationRecord
   enum :category, { technical: 0, commercial: 1, overall: 2 }
 
   def self.update_rankings(user, category, team_ids)
-
+    team_ids.each_with_index do |team_id, position|
+      Ranking.where(user_id: user.id, team_id: team_id, category: category).update!(position: position + 1)
+    end
   end
-  
+
   # Class method to get average score for a team by category
   def self.average_score_by_category(team_id, category)
     where(team_id: team_id, category: category).average(:position)
