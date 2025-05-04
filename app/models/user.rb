@@ -22,6 +22,26 @@ class User < ApplicationRecord
   scope :admins, -> { where(user_type: :admin) }
   scope :team_members, -> { where(user_type: :team_member) }
 
+  # Returns a list of teams available for the current user to rank
+  #
+  # @return [ActiveRecord::Relation<Team>] Collection of available teams
+  #   - For team members: All teams except their own team and any teams they're excluded from ranking
+  #   - For judges and admins: All teams
+  def available_teams
+    teams = Team.all
+
+    if self.team_member?
+      # Filter out user's own team
+      teams = teams.where.not(id: self.team_id)
+
+      # Filter out teams excluded from ranking
+      excluded_team_ids = Exclusion.where(team_id: self.team_id).pluck(:excluded_team_id)
+      teams = teams.where.not(id: excluded_team_ids) if excluded_team_ids.any?
+    end
+
+    teams
+  end
+
   private
 
   def team_member_must_have_team
@@ -29,7 +49,7 @@ class User < ApplicationRecord
       errors.add(:team_id, "must be present for team members")
     end
   end
-  
+
   def judges_and_admins_must_not_have_team
     if (judge? || admin?) && team_id.present?
       errors.add(:team_id, "must not be present for judges or admins")

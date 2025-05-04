@@ -1,5 +1,7 @@
 FactoryBot.define do
   factory :user do
+    skip_invitation { true }
+
     factory :team_member do
       name                  { "Team Member" }
       email                 { "team.member@example.com" }

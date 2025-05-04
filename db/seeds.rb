@@ -14,6 +14,7 @@ admin = User.find_or_create_by!(email: "peter.bell@modaxo.com") do |user|
   user.password = "password"
   user.password_confirmation = "password"
   user.user_type = "admin"
+  user.skip_invitation = true  # This prevents the invitation email
 end
 
 puts "Default admin user created: #{admin.email}"

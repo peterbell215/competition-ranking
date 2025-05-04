@@ -49,4 +49,55 @@ RSpec.describe User, type: :model do
       end
     end
   end
+
+  describe "#available_teams" do
+    let!(:team1) { FactoryBot.create(:team) }
+    let!(:team2) { FactoryBot.create(:team) }
+    let!(:team3) { FactoryBot.create(:team) }
+
+    context "when user is a team member" do
+      subject(:user) { FactoryBot.create(:team_member, team: team1) }
+
+      it "returns all teams except their own team" do
+        available_teams = user.available_teams
+
+        expect(available_teams).to include(team2, team3)
+        expect(available_teams).not_to include(team1)
+        expect(available_teams.count).to eq(2)
+      end
+
+      it "doesn't return teams they are excluded from" do
+        # Create exclusion for this user from team3
+        FactoryBot.create(:exclusion, team: user.team, excluded_team: team3)
+
+        available_teams = user.available_teams
+
+        expect(available_teams).to include(team2)
+        expect(available_teams).not_to include(team1, team3)
+        expect(available_teams.count).to eq(1)
+      end
+    end
+
+    context "when user is a judge" do
+      subject(:user) { FactoryBot.create(:judge) }
+
+      it "returns all teams" do
+        available_teams = user.available_teams
+
+        expect(available_teams).to include(team1, team2, team3)
+        expect(available_teams.count).to eq(3)
+      end
+    end
+
+    context "when user is an admin" do
+      subject(:user) { FactoryBot.create(:admin) }
+
+      it "returns all teams" do
+        available_teams = user.available_teams
+
+        expect(available_teams).to include(team1, team2, team3)
+        expect(available_teams.count).to eq(3)
+      end
+    end
+  end
 end
