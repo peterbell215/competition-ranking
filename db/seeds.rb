@@ -8,13 +8,17 @@
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
 
-# Create default admin user
-admin = User.find_or_create_by!(email: "peter.bell@modaxo.com") do |user|
-  user.name = "Peter Bell"
-  user.password = "password"
-  user.password_confirmation = "password"
-  user.user_type = "admin"
-  user.skip_invitation = true  # This prevents the invitation email
-end
+User.delete_all
 
-puts "Default admin user created: #{admin.email}"
+user = User.create!(
+  email: "peter.bell@modaxo.com",
+  name: "Peter Bell",
+  password: "password",
+  password_confirmation: "password",
+  user_type: "admin",
+  skip_invitation: true)
+
+user.update!(
+  invitation_token: nil,
+  invitation_sent_at: nil
+)
