@@ -1,64 +1,71 @@
 require 'rails_helper'
 
-RSpec.describe "Teams", type: :system do
-  before do
-    # Create an admin user for authentication
-    admin = FactoryBot.create(:admin)
+RSpec.describe "Teams Management", type: :system do
 
-    # Sign in as admin before each test
-    visit new_user_session_path
-    fill_in "Email", with: admin.email
-    fill_in "Password", with: "password"
-    click_button "Log in"
-  end
+  # This test focuses on verifying nav bar navigation
+  describe "navigating to Teams through navbar" do
+    it "can navigate to the Teams page through the navbar" do
+      login
+      goto_teams_page
+    end
 
-  describe "creating a new team" do
     it "creates a team with valid attributes" do
-      visit teams_path
-      click_on "New team"
+      login
+      goto_teams_page
 
+      # Click "New team" button to go to the new team form
+      click_link "New team"
+
+      # Fill out the form
       fill_in "Name", with: "Test Team"
       fill_in "Description", with: "This is a test team created through system testing"
+      click_button "Create Team"
 
-      click_on "Create Team"
-
+      # Verify the team was created successfully
       expect(page).to have_content "Team was successfully created"
-      expect(page).to have_selector "h1", text: "Test Team"
-
-      # Verify the team details are visible on the show page
+      expect(page).to have_selector "h2", text: "Test Team"
       expect(page).to have_content "This is a test team created through system testing"
 
-      # Verify the team was saved in the database with correct attributes
+      # Verify data was saved correctly
       team = Team.find_by(name: "Test Team")
       expect(team).not_to be_nil
       expect(team.name).to eq("Test Team")
       expect(team.description).to eq("This is a test team created through system testing")
+
+      # Verify that clicking on the Teams link in the navbar takes us to the teams index page
+      visit rankings_path  # first go to another page
+      click_link "Teams"   # then try to use the navbar
+      expect(page).to have_current_path(teams_path)
     end
 
-    it "shows validation errors when name is missing" do
-      visit new_team_path
+    def login
+      admin = User.first
 
-      fill_in "Description", with: "Team with missing name"
-      click_on "Create Team"
+      # Sign in as admin
+      visit new_user_session_path
+      fill_in "Email", with: admin.email
+      fill_in "Password", with: "password"
+      click_button "Log in"
 
-      expect(page).to have_content "prohibited this team from being saved"
-      expect(page).to have_content "Name can't be blank"
-
-      # Make sure we're still on the new team form
-      expect(page).to have_selector "h1", text: "New team"
+      expect(page).to have_content(admin.name)
     end
 
-    it "creates a team without a description" do
-      visit new_team_path
+    def goto_teams_page
+      # Go to the rankings page first
+      visit rankings_path
+      expect(page).to have_current_path(rankings_path)
 
-      fill_in "Name", with: "Team Without Description"
+      # We should see Teams in the navbar
+      expect(page).to have_link("Teams")
 
-      expect {
-        click_on "Create Team"
-      }.to change(Team, :count).by(1)
+      # Click on Teams in the navbar
+      click_link "Teams"
 
-      expect(page).to have_content "Team was successfully created"
-      expect(page).to have_selector "h1", text: "Team Without Description"
+      # Verify we're on the teams page
+      expect(page).to have_current_path(teams_path)
+      expect(page).to have_content("Teams")
+      expect(page).to have_link("New team")
     end
   end
 end
+

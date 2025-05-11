@@ -3,6 +3,10 @@ FactoryBot.define do
     skip_invitation     { true }
     password            { "password" }
 
+    after(:create) do |user|
+      user.update_columns(invitation_token: nil, invitation_sent_at: nil)
+    end
+
     factory :team_member do
       sequence(:name)   { |n| "Team Member #{n}" }
       sequence(:email)  { |n| "team.member#{n}@modaxo.com" }

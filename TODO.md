@@ -4,4 +4,6 @@
 - Replace rankings.js class selector with stimulus target and stimulus event handler
 - password setting form needs purecss treatment.
 - Change the rankings save feedback to be the same styling/approach as used for standard CRUD operations.
+- Test that the user's own team and the excluded team are not included in the rankings.
+- On the sign in screen the navbar should not be visible.
 - 
