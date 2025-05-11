@@ -58,7 +58,7 @@ Rails.application.configure do
   # config.action_mailer.raise_delivery_errors = false
 
   # Set host to be used by links generated in mailer templates.
-  config.action_mailer.default_url_options = { host: "modaxo-randd-summit.com" }
+  config.action_mailer.default_url_options = { host: "competition-ranking-9000a6b9afa9.herokuapp.com" }
 
   # Specify outgoing MAILGUN as the SMTP server.
   config.action_mailer.smtp_settings = {

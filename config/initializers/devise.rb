@@ -25,7 +25,7 @@ Devise.setup do |config|
   # note that it will be overwritten if you use your own mailer class
   # with default "from" parameter.
   # config/initializers/devise.rb (ensure these are properly configured)
-  config.mailer_sender = 'noreply@yourapp.com'
+  config.mailer_sender = 'noreply@modaxo-randd-summit.com'
 
   # Configure the class responsible to send e-mails.
   # config.mailer = 'Devise::Mailer'
