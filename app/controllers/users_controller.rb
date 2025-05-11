@@ -6,7 +6,7 @@ class UsersController < ApplicationController
 
   # GET /users or /users.json
   def index
-    @users = User.all
+    @users = User.order(:name)
   end
 
   # GET /users/1 or /users/1.json
@@ -28,7 +28,7 @@ class UsersController < ApplicationController
     @user.password = Devise.friendly_token # Generate a temporary random password
 
     if @user.save
-      redirect_to users_path, notice: 'User was successfully created. An email has been sent with instructions to set a password.'
+      redirect_to users_path, notice: "User was successfully created. An email has been sent with instructions to set a password."
     else
       render :new, status: :unprocessable_entity
     end
