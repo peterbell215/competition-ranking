@@ -74,3 +74,74 @@ body div.container {
     font-size: 85%;
     padding: 0.3em 0.7em;
 }
+
+/* Devise form styles */
+.login-container {
+    padding: 2em;
+    margin: 1em 0;
+    background-color: #f7f7f7;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.content-head {
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin: 0 0 1em 0;
+    color: #34495e;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 0.5em;
+}
+
+.is-center {
+    text-align: center;
+}
+
+.pure-form label {
+    margin: 0.5em 0 0.2em;
+}
+
+.pure-button-primary {
+    background-color: #FF8200; /* Use Modaxo orange to match banner */
+    color: white;
+    margin-top: 1em;
+}
+
+.devise-links {
+    margin-top: 1.5em;
+    font-size: 0.9em;
+    text-align: center;
+}
+
+.devise-links a {
+    color: #FF8200; /* Match Modaxo orange */
+    text-decoration: none;
+    margin: 0 0.5em;
+}
+
+.devise-links a:hover {
+    text-decoration: underline;
+}
+
+.password-hint, .field-hint {
+    font-size: 0.85em;
+    color: #666;
+    display: block;
+    margin-top: -0.5em;
+    margin-bottom: 0.5em;
+}
+
+.confirmation-notice {
+    padding: 0.5em;
+    margin: 1em 0;
+    background-color: #f8f9fa;
+    border-left: 4px solid #FF8200;
+    font-size: 0.9em;
+}
+
+.account-actions {
+    margin-top: 2em;
+    padding-top: 1em;
+    border-top: 1px solid #eee;
+}
