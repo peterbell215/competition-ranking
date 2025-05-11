@@ -28,36 +28,32 @@
     <div class="banner-title">AI Competition</div>
   </div>
 
-  <nav>
-    <div class="pure-menu pure-menu-horizontal">
-      <ul class="pure-menu-list">
-        <!-- Left-aligned items -->
-        <% if user_signed_in? && current_user.admin? %>
-          <li class="pure-menu-item"><%= link_to "Users", users_path, class: "pure-menu-link" %></li>
-          <li class="pure-menu-item"><%= link_to "Teams", teams_path, class: "pure-menu-link" %></li>
-        <% end %>
-        <li class="pure-menu-item"><%= link_to "Rankings", rankings_path, class: "pure-menu-link" %></li>
-        <li class="pure-menu-item"><%= link_to "Results", results_path, class: "pure-menu-link" %></li>
-        <!-- Add other nav items as needed -->
-      </ul>
+  <% if user_signed_in? %>
+    <nav>
+      <div class="pure-menu pure-menu-horizontal">
+        <ul class="pure-menu-list">
+          <!-- Left-aligned items -->
+          <% if current_user.admin? %>
+            <li class="pure-menu-item"><%= link_to "Users", users_path, class: "pure-menu-link" %></li>
+            <li class="pure-menu-item"><%= link_to "Teams", teams_path, class: "pure-menu-link" %></li>
+          <% end %>
+          <li class="pure-menu-item"><%= link_to "Rankings", rankings_path, class: "pure-menu-link" %></li>
+          <li class="pure-menu-item"><%= link_to "Results", results_path, class: "pure-menu-link" %></li>
+          <!-- Add other nav items as needed -->
+        </ul>
 
-      <!-- Right-aligned logout item -->
-      <ul class="pure-menu-list right-menu">
-        <% if user_signed_in? %>
+        <!-- Right-aligned logout item -->
+        <ul class="pure-menu-list right-menu">
           <li class="pure-menu-item">
             <span class="user-info"><%= current_user.name %> (<%= current_user.user_type.humanize %>)</span>
           </li>
           <li class="pure-menu-item">
             <%= button_to "Logout", destroy_user_session_path, method: :delete, class: "pure-menu-link logout-button" %>
           </li>
-        <% else %>
-          <li class="pure-menu-item">
-            <%= link_to "Login", new_user_session_path, class: "pure-menu-link" %>
-          </li>
-        <% end %>
-      </ul>
-    </div>
-  </nav>
+        </ul>
+      </div>
+    </nav>
+  <% end %>
 
   <body>
     <div class="container" data-controller="notice-dismissal">
