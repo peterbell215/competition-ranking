@@ -4,5 +4,5 @@
   <%= link_to "Edit this team", edit_team_path(@team) %> |
   <%= link_to "Back to teams", teams_path %>
 
-  <%= button_to "Destroy this team", @team, method: :delete %>
+  <%= button_to "Delete this Team", @team, method: :delete, class: "pure-button button-error", style: "margin-top: 10px;" %>
 </div>

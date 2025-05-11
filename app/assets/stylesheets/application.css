@@ -63,3 +63,14 @@ body div.container {
     margin-top: 1em; /* Adjust the value as needed */
     margin-bottom: 1em; /* Adjust the value as needed */
 }
+
+/* Custom button styles */
+.button-error {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.button-small {
+    font-size: 85%;
+    padding: 0.3em 0.7em;
+}

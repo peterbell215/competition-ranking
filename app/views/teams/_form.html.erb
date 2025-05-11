@@ -44,9 +44,9 @@
           <div class="pure-g exclusion-row">
             <div class="pure-u-3-4"><%= excluded_team.name %></div>
             <div class="pure-u-1-4">
-              <%= button_to "Remove", exclusion_path(team.exclusions.find_by(excluded_team: excluded_team)), 
-                    method: :delete, 
-                    class: "pure-button button-warning button-small", 
+              <%= button_to "Remove", team_exclusion_path(team, team.exclusions.find_by(excluded_team: excluded_team)),
+                    method: :delete,
+                    class: "pure-button button-warning",
                     form: { data: { turbo_confirm: "Are you sure you want to remove this exclusion?" } } %>
             </div>
           </div>
@@ -64,11 +64,12 @@
         <%= f.hidden_field :team_id, value: team.id %>
         <div class="pure-g">
           <div class="pure-u-3-4">
-            <%= f.select :excluded_team_id, 
+            <%= f.select :excluded_team_id,
                   Team.where.not(id: team.id)
                       .where.not(id: team.excluded_teams.pluck(:id))
-                      .pluck(:name, :id), 
-                  { include_blank: "Select a team to exclude" }, 
+                      .order(:name)
+                      .pluck(:name, :id),
+                  { include_blank: "Select a team to exclude" },
                   { class: "pure-input-1", required: true } %>
           </div>
           <div class="pure-u-1-4">
