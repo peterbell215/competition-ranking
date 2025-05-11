@@ -5,10 +5,10 @@ class Team < ApplicationRecord
   
   # Exclusion associations
   has_many :exclusions, dependent: :destroy
-  has_many :excluded_teams, through: :exclusions
-  
+  has_many :excluded_teams, through: :exclusions, source: :excluded_team
+
   has_many :inverse_exclusions, class_name: "Exclusion", foreign_key: "excluded_team_id", dependent: :destroy
-  has_many :excluded_teams, through: :inverse_exclusions, source: :team
+  has_many :excluded_by_teams, through: :inverse_exclusions, source: :team
 
   # Validations
   validates :name, presence: true, uniqueness: true
