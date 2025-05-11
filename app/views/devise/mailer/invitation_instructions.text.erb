@@ -1,11 +1,9 @@
-<%= t("devise.mailer.invitation_instructions.hello", email: @resource.email) %>
+Hello <%= @resource.email %>
 
-<%= t("devise.mailer.invitation_instructions.someone_invited_you", url: root_url) %>
+Please click on the link below to enable your account on the Modaxo R&D Summit voting app.
 
-<%= accept_invitation_url(@resource, invitation_token: @token) %>
+<%= link_to "Enable Account", accept_invitation_url(@resource, invitation_token: @token) %>
 
-<% if @resource.invitation_due_at %>
-  <%= t("devise.mailer.invitation_instructions.accept_until", due_date: l(@resource.invitation_due_at, format: :'devise.mailer.invitation_instructions.accept_until_format')) %>
-<% end %>
-
-<%= t("devise.mailer.invitation_instructions.ignore") %>
+Kind regards,<br/>
+Peter
+</p>
