@@ -1,0 +1,48 @@
+<div class="results-section">
+  <h2><%= category %></h2>
+  <table class="pure-table pure-table-bordered">
+    <thead>
+      <tr>
+        <th rowspan="2" class="section-header">Rank</th>
+        <th colspan="2" class="section-header">Team Member Rankings</th>
+        <th colspan="2" class="section-header">Judge & Admin Rankings</th>
+        <th colspan="2" class="section-header">Combined Rankings</th>
+      </tr>
+      <tr>
+        <th>Team</th>
+        <th>Average Position</th>
+        <th>Team</th>
+        <th>Average Position</th>
+        <th>Team</th>
+        <th>Average Position</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% (0...Team.count).each do |row| %>
+        <tr>
+          <td>
+            <%= row + 1 %>
+          </td>
+          <td>
+            <%= @team_members_rankings_by_category[category][row]&.at(0)&.name %>
+          </td>
+          <td>
+            <%= number_with_precision(@team_members_rankings_by_category[category][row]&.at(1), precision: 2)%>
+          </td>
+          <td>
+            <%= @judges_and_admin_rankings_by_category[category][row]&.at(0)&.name %>
+          </td>
+          <td>
+            <%= number_with_precision(@judges_and_admin_rankings_by_category[category][row]&.at(1), precision: 2)%>
+          </td>
+          <td>
+            <%= @combined_rankings_by_category[category][row]&.at(0)&.name %>
+          </td>
+          <td>
+            <%= number_with_precision(@combined_rankings_by_category[category][row]&.at(1), precision: 2)%>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

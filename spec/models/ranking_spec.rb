@@ -135,11 +135,11 @@ RSpec.describe Ranking, type: :model do
         team_member_results = { team1 => 1.0, team2 => 2.0, team3 => 3.0 }
         judge_admin_results = { team1 => 2.0, team2 => 3.0, team3 => 1.0 }
 
-        expected_result = {
-          team1 => 1.5,  # (1.0 + 2.0) / 2 = 1.5
-          team3 => 2.0,  # (3.0 + 1.0) / 2 = 2.0
-          team2 => 2.5   # (2.0 + 3.0) / 2 = 2.5
-        }
+        expected_result = expected_result = [
+          [team1, 1.5],  # (1.0 + 2.0) / 2 = 1.5
+          [team3, 2.0],  # (3.0 + 1.0) / 2 = 2.0
+          [team2, 2.5]   # (2.0 + 3.0) / 2 = 2.5
+        ]
 
         result = Ranking.average_results_for_category(team_member_results, judge_admin_results)
         expect(result).to eq(expected_result)
@@ -151,11 +151,11 @@ RSpec.describe Ranking, type: :model do
         team_member_results = { team1 => 1.0, team3 => 3.0 }
         judge_admin_results = { team1 => 2.0, team2 => 3.0, team3 => 1.0 }
 
-        expected_result = {
-          team1 => 1.5,  # (1.0 + 2.0) / 2 = 1.5
-          team3 => 2.0,  # (3.0 + 1.0) / 2 = 2.0
-          team2 => 3.0   # Only judge_admin_results has team2
-        }
+        expected_result = [
+          [team1, 1.5],  # (1.0 + 2.0) / 2 = 1.5
+          [team3, 2.0],  # (3.0 + 1.0) / 2 = 2.0
+          [team2, 3.0]   # Only judge_admin_results has team2
+        ]
 
         result = Ranking.average_results_for_category(team_member_results, judge_admin_results)
         expect(result).to eq(expected_result)
@@ -173,7 +173,7 @@ RSpec.describe Ranking, type: :model do
         result = Ranking.average_results_for_category(team_member_results, judge_admin_results)
 
         # The new team should not appear in the results since it has no rankings
-        expect(result[team4]).to be_nil
+        expect(result.select { |team, average| team==team4 && average }).to be_empty
       end
     end
 
@@ -182,11 +182,11 @@ RSpec.describe Ranking, type: :model do
         team_member_results = { team1 => 1.0, team2 => nil, team3 => 3.0 }
         judge_admin_results = { team1 => 2.0, team2 => 3.0, team3 => 1.0 }
 
-        expected_result = {
-          team1 => 1.5,  # (1.0 + 2.0) / 2 = 1.5
-          team3 => 2.0,  # (3.0 + 1.0) / 2 = 2.0
-          team2 => 3.0   # Only judge_admin_results has a non-nil value for team2
-        }
+        expected_result = [
+          [team1, 1.5],  # (1.0 + 2.0) / 2 = 1.5
+          [team3, 2.0],  # (3.0 + 1.0) / 2 = 2.0
+          [team2, 3.0]   # Only judge_admin_results has a non-nil value for team2
+        ]
 
         result = Ranking.average_results_for_category(team_member_results, judge_admin_results)
         expect(result).to eq(expected_result)
@@ -197,7 +197,7 @@ RSpec.describe Ranking, type: :model do
       it 'returns an empty array' do
         result = Ranking.average_results_for_category({}, {})
 
-        expect(result.compact!).to be_empty
+        expect(result.all? { |_team, average| average.nil?}).to be_truthy
       end
     end
   end

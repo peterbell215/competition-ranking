@@ -17,10 +17,10 @@ class Ranking < ApplicationRecord
     end
   end
 
-  def self.calculate_results_for_user_type_and_category(user_type, category)
+  def self.calculate_results_for_user_type_and_category(teams, user_type, category)
     results = {}
 
-    Team.all.each do |team|
+    teams.each do |team|
       # Get all rankings for this team in this category
       average_position = Ranking.where(team: team, category: category).joins(:user).where(users: { user_type: user_type }).average(:position)
 
@@ -32,18 +32,21 @@ class Ranking < ApplicationRecord
     results.sort_by { |_team, average_position| average_position || Float::INFINITY }
   end
 
-  def self.average_results_for_category(team_member_results, judge_admin_results)
+  def self.average_results_for_category(teams, team_member_results, judge_admin_results)
     results = {}
 
-    Team.all.each do |team|
-      results[team] = if team_member_results[team] && judge_admin_results[team]
-                        (team_member_results[team] + judge_admin_results[team]) / 2.0
+    teams.each do |team|
+      team_member_result = team_member_results.find { |_team, ranking| team.id == _team.id  }&.at(1)
+      judge_admin_result = judge_admin_results.find { |_team, ranking| team.id == _team.id  }&.at(1)
+
+      results[team] = if team_member_result && judge_admin_result
+                        (team_member_result + judge_admin_result) * 0.5
                       else
-                        judge_admin_results[team] || team_member_results[team]
+                        team_member_result || judge_admin_result
                       end
     end
 
     # Return results sorted by position (lower is better)
-    results.sort_by { |_team, average_position| average_position || Float::INFINITY } .to_h
+    results.sort_by { |_team, average_position| average_position || Float::INFINITY }
   end
 end
