@@ -31,4 +31,19 @@ class Ranking < ApplicationRecord
     # Return results sorted by position (lower is better)
     results.sort_by { |_team, average_position| average_position || Float::INFINITY }
   end
+
+  def self.average_results_for_category(team_member_results, judge_admin_results)
+    results = {}
+
+    Team.all.each do |team|
+      results[team] = if team_member_results[team] && judge_admin_results[team]
+                        (team_member_results[team] + judge_admin_results[team]) / 2.0
+                      else
+                        judge_admin_results[team] || team_member_results[team]
+                      end
+    end
+
+    # Return results sorted by position (lower is better)
+    results.sort_by { |_team, average_position| average_position || Float::INFINITY } .to_h
+  end
 end

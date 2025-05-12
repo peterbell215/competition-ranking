@@ -124,4 +124,81 @@ RSpec.describe Ranking, type: :model do
       end
     end
   end
+
+  describe '.average_results_for_category' do
+    let!(:team1) { FactoryBot.create(:team) }
+    let!(:team2) { FactoryBot.create(:team) }
+    let!(:team3) { FactoryBot.create(:team) }
+
+    context 'when both hashes have values for all keys' do
+      it 'returns averages of the values' do
+        team_member_results = { team1 => 1.0, team2 => 2.0, team3 => 3.0 }
+        judge_admin_results = { team1 => 2.0, team2 => 3.0, team3 => 1.0 }
+
+        expected_result = {
+          team1 => 1.5,  # (1.0 + 2.0) / 2 = 1.5
+          team3 => 2.0,  # (3.0 + 1.0) / 2 = 2.0
+          team2 => 2.5   # (2.0 + 3.0) / 2 = 2.5
+        }
+
+        result = Ranking.average_results_for_category(team_member_results, judge_admin_results)
+        expect(result).to eq(expected_result)
+      end
+    end
+
+    context 'when one hash is missing a key' do
+      it 'uses only the available value' do
+        team_member_results = { team1 => 1.0, team3 => 3.0 }
+        judge_admin_results = { team1 => 2.0, team2 => 3.0, team3 => 1.0 }
+
+        expected_result = {
+          team1 => 1.5,  # (1.0 + 2.0) / 2 = 1.5
+          team3 => 2.0,  # (3.0 + 1.0) / 2 = 2.0
+          team2 => 3.0   # Only judge_admin_results has team2
+        }
+
+        result = Ranking.average_results_for_category(team_member_results, judge_admin_results)
+        expect(result).to eq(expected_result)
+      end
+    end
+
+    context 'when both hashes are missing the same key' do
+      it 'returns nil for that team' do
+        # Create a new team that doesn't have any rankings
+        team4 = FactoryBot.create(:team, name: 'Team 4')
+
+        team_member_results = { team1 => 1.0, team2 => 2.0, team3 => 3.0 }
+        judge_admin_results = { team1 => 2.0, team2 => 3.0, team3 => 1.0 }
+
+        result = Ranking.average_results_for_category(team_member_results, judge_admin_results)
+
+        # The new team should not appear in the results since it has no rankings
+        expect(result[team4]).to be_nil
+      end
+    end
+
+    context 'when one hash has a nil value' do
+      it 'uses only the non-nil value' do
+        team_member_results = { team1 => 1.0, team2 => nil, team3 => 3.0 }
+        judge_admin_results = { team1 => 2.0, team2 => 3.0, team3 => 1.0 }
+
+        expected_result = {
+          team1 => 1.5,  # (1.0 + 2.0) / 2 = 1.5
+          team3 => 2.0,  # (3.0 + 1.0) / 2 = 2.0
+          team2 => 3.0   # Only judge_admin_results has a non-nil value for team2
+        }
+
+        result = Ranking.average_results_for_category(team_member_results, judge_admin_results)
+        expect(result).to eq(expected_result)
+      end
+    end
+
+    context 'when both hashes are empty' do
+      it 'returns an empty array' do
+        result = Ranking.average_results_for_category({}, {})
+
+        expect(result.compact!).to be_empty
+      end
+    end
+  end
 end
