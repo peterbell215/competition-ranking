@@ -32,6 +32,17 @@
     font-weight: bold;
 }
 
+/* iPad-specific adjustments (typical iPad width range) */
+@media screen and (max-width: 1024px) {
+    .banner-title {
+        font-size: 3.5em;
+    }
+
+    .banner-logo {
+        height: 6em;
+    }
+}
+
 nav {
     .pure-menu {
         background-color: #FF8200; /* Dark background color */
