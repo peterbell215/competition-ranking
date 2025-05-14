@@ -43,6 +43,38 @@
     }
 }
 
+/* iPhone-specific adjustments */
+@media screen and (max-width: 480px) {
+    /* Banner adjustments */
+    .banner-title {
+        display: none;
+    }
+
+    .banner-logo {
+        height: 5em;
+        margin: 0 auto;
+    }
+
+    .banner {
+        justify-content: center;
+    }
+
+    /* Override Pure CSS grid for rankings to stack columns */
+    .rankings-container .pure-g > div[class*="pure-u-"] {
+        width: 100%;
+        display: block;
+        margin-bottom: 2em;
+    }
+
+    .ranking-column {
+        margin-bottom: 2em;
+    }
+
+    .ranking-list {
+        min-height: auto;
+    }
+}
+
 nav {
     .pure-menu {
         background-color: #FF8200; /* Dark background color */
