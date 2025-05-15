@@ -16,7 +16,7 @@
           <% end %>
         </ul>
         <div class="mobile-save-container">
-          <button class="mobile-save-button pure-button pure-button-primary">Save Technical</button>
+          <button class="mobile-save-button pure-button pure-button-primary" disabled>Save Technical</button>
         </div>
       </div>
     </div>
@@ -32,7 +32,7 @@
           <% end %>
         </ul>
         <div class="mobile-save-container">
-          <button class="mobile-save-button pure-button pure-button-primary">Save Commercial</button>
+          <button class="mobile-save-button pure-button pure-button-primary" disabled>Save Commercial</button>
         </div>
       </div>
     </div>
@@ -48,14 +48,14 @@
           <% end %>
         </ul>
         <div class="mobile-save-container">
-          <button class="mobile-save-button pure-button pure-button-primary">Save Overall</button>
+          <button class="mobile-save-button pure-button pure-button-primary" disabled>Save Overall</button>
         </div>
       </div>
     </div>
   </div>
 
   <div class="save-container">
-    <button id="save-rankings" class="pure-button pure-button-primary">Save Rankings</button>
+    <button id="save-rankings" class="pure-button pure-button-primary" disabled>Save Rankings</button>
   </div>
 </div>
 
@@ -101,6 +101,11 @@
     .mobile-save-button {
         width: 100%;
         margin-top: 10px;
+    }
+
+    .pure-button[disabled] {
+        opacity: 0.6;
+        cursor: not-allowed;
     }
 
     /* Only show mobile buttons on small screens */

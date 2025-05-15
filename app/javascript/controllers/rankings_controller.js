@@ -7,11 +7,18 @@ export default class extends Controller {
         // Initialize state when controller connects
         console.log("rankingsController connected");
 
+        // Track if rankings have changed
+        this.rankingsChanged = false;
+
+        // Store initial rankings state for comparison
+        this.initialRankings = this.captureCurrentRankings();
+
         const lists = document.querySelectorAll('.ranking-list');
         lists.forEach(list => {
             new Sortable(list, {
                 animation: 150,
-                ghostClass: 'ranking-item-ghost'
+                ghostClass: 'ranking-item-ghost',
+                onEnd: this.handleRankingChange.bind(this)
             });
         });
 
@@ -21,6 +28,52 @@ export default class extends Controller {
         // Handle mobile save buttons
         document.querySelectorAll('.mobile-save-button').forEach(button => {
             button.addEventListener('click', this.saveRankings.bind(this));
+        });
+    }
+
+    // Capture the current state of rankings
+    captureCurrentRankings() {
+        const rankings = {};
+
+        document.querySelectorAll('.ranking-column').forEach(column => {
+            const category = column.dataset.category;
+            rankings[category] = [];
+
+            column.querySelectorAll('.ranking-item').forEach(item => {
+                rankings[category].push(item.dataset.teamId);
+            });
+        });
+
+        return JSON.stringify(rankings);
+    }
+
+    // Handle when a ranking item is moved
+    handleRankingChange() {
+        const currentRankings = this.captureCurrentRankings();
+
+        // Check if rankings have changed
+        if (currentRankings !== this.initialRankings) {
+            this.rankingsChanged = true;
+            this.enableSaveButtons();
+        } else {
+            this.rankingsChanged = false;
+            this.disableSaveButtons();
+        }
+    }
+
+    // Enable all save buttons
+    enableSaveButtons() {
+        document.getElementById('save-rankings').removeAttribute('disabled');
+        document.querySelectorAll('.mobile-save-button').forEach(button => {
+            button.removeAttribute('disabled');
+        });
+    }
+
+    // Disable all save buttons
+    disableSaveButtons() {
+        document.getElementById('save-rankings').setAttribute('disabled', 'disabled');
+        document.querySelectorAll('.mobile-save-button').forEach(button => {
+            button.setAttribute('disabled', 'disabled');
         });
     }
 
@@ -50,6 +103,10 @@ export default class extends Controller {
             .then(data => {
                 if (data.success) {
                     this.showNotice(data.notice);
+                    // Update initial rankings state after successful save
+                    this.initialRankings = this.captureCurrentRankings();
+                    this.rankingsChanged = false;
+                    this.disableSaveButtons();
                 } else {
                     this.showError('Error saving rankings: ' + data.error);
                 }
