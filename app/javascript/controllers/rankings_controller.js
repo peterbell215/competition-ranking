@@ -15,8 +15,13 @@ export default class extends Controller {
             });
         });
 
-        // Handle save button click
+        // Handle main save button click
         document.getElementById('save-rankings').addEventListener('click', this.saveRankings.bind(this));
+
+        // Handle mobile save buttons
+        document.querySelectorAll('.mobile-save-button').forEach(button => {
+            button.addEventListener('click', this.saveRankings.bind(this));
+        });
     }
 
     saveRankings() {

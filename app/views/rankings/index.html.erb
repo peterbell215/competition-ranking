@@ -15,6 +15,9 @@
             </li>
           <% end %>
         </ul>
+        <div class="mobile-save-container">
+          <button class="mobile-save-button pure-button pure-button-primary">Save Technical</button>
+        </div>
       </div>
     </div>
 
@@ -28,6 +31,9 @@
             </li>
           <% end %>
         </ul>
+        <div class="mobile-save-container">
+          <button class="mobile-save-button pure-button pure-button-primary">Save Commercial</button>
+        </div>
       </div>
     </div>
 
@@ -41,6 +47,9 @@
             </li>
           <% end %>
         </ul>
+        <div class="mobile-save-container">
+          <button class="mobile-save-button pure-button pure-button-primary">Save Overall</button>
+        </div>
       </div>
     </div>
   </div>
@@ -75,10 +84,33 @@
         margin-top: 30px;
         text-align: center;
     }
-    
+
     #notice_explanation.error h2 {
         color: #721c24;
         background-color: #f8d7da;
         border: 1px solid #f5c6cb;
+    }
+
+    /* Mobile save buttons - hidden by default */
+    .mobile-save-container {
+        display: none;
+        margin-top: 15px;
+        text-align: center;
+    }
+
+    .mobile-save-button {
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    /* Only show mobile buttons on small screens */
+    @media screen and (max-width: 480px) {
+        .mobile-save-container {
+            display: block;
+        }
+
+        .save-container {
+            display: none; /* Hide the main save button on mobile */
+        }
     }
 </style>
